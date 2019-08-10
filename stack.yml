@@ -1,25 +1,20 @@
-version: '3'
+version: '3.1'
 
 services:
-  reverse-proxy:
+  traefik:
     image: traefik # The official Traefik docker image
     command: --api --docker --docker.watch --docker.domain=localhost --logLevel=DEBUG # Enables the web UI and tells Traefik to listen to docker
     ports:
-      - "80:80"     # The HTTP port
-      - "443:443"
-      - "8080:8080" # The Web UI (enabled by --api)
+      - 80:80     # The HTTP port
+      - 443:443
+      - 8080:8080 # The Web UI (enabled by --api)
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock # So that Traefik can listen to the Docker events
       - $PWD/traefik.toml:/etc/traefik/traefik.toml
     networks:
-      - portainer-net
+      - reverse-proxy-net
 
-  # whoami:
-  #   image: containous/whoami # A container that exposes an API to show its IP address
-  #   labels:
-  #     - "traefik.frontend.rule=Host:whoami.docker.localhost"
-
-networks:
-  portainer-net:
-    external:
-      name: portainer-net
+networks: 
+  reverse-proxy-net:
+    external: 
+      name: reverse-proxy-net
