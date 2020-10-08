@@ -1,0 +1,18 @@
+version: '3.1'
+
+services:
+  traefik:
+    image: traefik:2.0
+    command: --api.insecure=true --providers.docker
+    ports:
+      - 80:80
+      - 443:443
+      - 8080:8080
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - rev-proxy
+
+networks:
+  rev-proxy:
+    external: true
